@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+</head>
+
+<body>
+
+<div ng-app="app" ng-controller="myController">
+    <button ng-click="send()">Log</button>
+</div>
+
+<script src="bower_components/angular/angular.js"></script>
+<script>
+
+    (function (){
+
+        var app = angular.module("app", []);
+        app.config(["$provide", function($provide) {
+            $provide.decorator("logProvider", ["$delegate", function($delegate) {
+                return {
+                    log: function(msg) {
+                        var date = new Date();
+                        $delegate.log(date.toString() + ": " + msg);
+                    }
+                };
+            }]);
+        }]);
+
+        app.provider("logProvider", LogProvider);
+        function LogProvider() {
+            var enabled = true;
+            this.disableLogging = function() {
+                enabled = false;
+            };
+            this.$get = function() {
+                if (enabled) {
+                    return {
+                        log: function(msg) {
+                            console.log(msg);
+                        }
+                    };
+                }
+                return {
+                    log: function () {}
+                };
+            };
+        }
+
+        app.controller("myController", ["$scope", "logProvider", function($scope, logProvider) {
+            $scope.send = function() {
+                logProvider.log("My message");
+            };
+        }]);
+
+
+
+    })();
+
+
+</script>
+</body>
+</html>

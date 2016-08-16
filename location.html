@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title></title>
+    </head>
+
+    <body ng-app="app" ng-controller="LocationCtrl">
+
+        <!--        <div ng-view></div>-->
+
+        <div ng-repeat="(key, value) in locationInfo">
+            <div><b>{{key}}</b>:&nbsp;</div>
+            <div>{{value}}</div>
+        </div>
+        <div>
+            <div>
+                <button ng-click="route()" class="btn btn-info">Route</button>
+                <button ng-click="hash()" class="btn btn-info">Hash</button>
+                <button ng-click="search()" class="btn btn-info">Search</button>
+                <button ng-click="url()" class="btn btn-info">Url</button>
+            </div>
+        </div>
+
+        <script src="bower_components/angular/angular.js"></script>
+        <script src="bower_components/angular-route/angular-route.js"></script>
+        <script>
+
+            (function (){
+
+                var app = angular.module("app", [ 'ngRoute']);
+                app.controller('LocationCtrl', LocationCtrl);
+                LocationCtrl.$inject = ['$scope', '$location'];
+                function LocationCtrl ($scope, $location) {
+                    var self = this;
+                    this.$location = $location;
+                    this.getLocationInfo = function () {
+
+                        console.log(self.$routeParams);
+                        return {
+                            "absolute-Url": self.$location.absUrl(),
+                            "hash": self.$location.hash(),
+                            "host": self.$location.host(),
+                            "path": self.$location.path(),
+                            "port": self.$location.port(),
+                            "protocol": self.$location.protocol(),
+                            "search": self.$location.search(), // retour json {"query":"value"}
+                            "url": self.$location.url()
+                        };
+                    };
+                    
+                    $scope.locationInfo = this.getLocationInfo();
+                    $scope.$on("$locationChangeStart", function () {
+                        $scope.locationInfo = self.getLocationInfo();
+                    });
+
+                    $scope.route = function () {
+                        $location.path("/mypath/1");
+                    };
+                    $scope.hash = function () {
+                        $location.hash("myhash");
+                    };
+                    $scope.search = function () {
+                        $location.search("query", "value");
+                    };
+                    
+                    $scope.url = function () {
+                        $location.url("/");
+                    };
+                }
+            })();
+
+
+        </script> 
+    </body>
+</html>

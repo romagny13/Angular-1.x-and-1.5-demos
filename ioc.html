@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+</head>
+
+<body ng-app="app">
+
+<div  ng-controller="MyCtrl">
+    {{ message }}
+</div>
+
+<script src="bower_components/angular/angular.js"></script>
+<script>
+
+    (function (){
+
+
+
+        var app = angular.module("app", []);
+        app.service('myService', myService);
+        function myService() {
+            this.methodOne = function () {
+                return 'Hello';
+            };
+        }
+
+        // 1
+//        app.controller('MyCtrl', function ($scope, myService) {
+//            $scope.message = myService.methodOne();
+//        });
+
+        // 2
+//        app.controller('MyCtrl',['$scope', 'myService', function ($scope, myService) {
+//            $scope.message = myService.methodOne();
+//        }]);
+
+//        app.controller('MyCtrl', MyCtrl);
+//        function  MyCtrl($scope, myService) {
+//            $scope.message = myService.methodOne();
+//        }
+//        MyCtrl.$inject = ['$scope', 'myService'];
+
+
+        // ou
+//        app.controller('MyCtrl',['$scope', 'myService', MyCtrl]);
+//        function  MyCtrl($scope, myService) {
+//            $scope.message = myService.methodOne();
+//        }
+
+
+        app.controller('MyCtrl',['$scope', '$injector', MyCtrl]);
+        function  MyCtrl($scope, $injector) {
+//            var myService = $injector.get('myService');
+//            $scope.message = myService.methodOne();
+//
+            var service;
+            service = $injector.instantiate(myService);
+//            if(!$injector.has('myService')){
+//                myService = $injector.instantiate(myService);
+//                console.log("instantiate");
+//            }
+//            else {
+//                myService = $injector.get('myService');
+//                console.log("get");
+//            }
+            $scope.message = myService.methodOne();
+            // invoke
+//            var result = $injector.invoke(function (myService) {
+//                return myService.methodOne();
+//            });
+//            $scope.message = result;
+
+        }
+
+
+//        app.value("myvalue", 123);
+//        app.config('logProvider', function (logProvider) {
+//            logProvider.disableLogging();
+//        });
+
+//        app.provider("logProvider", LogProvider);
+//        function LogProvider() {
+//            var enabled = true;
+//            this.disableLogging = function() {
+//                enabled = false;
+//            };
+//            this.$get = function() {
+//                if (enabled) {
+//                    return {
+//                        log: function(msg) {
+//                            console.log(msg);
+//                        }
+//                    };
+//                }
+//                return {
+//                    log: function () {}
+//                };
+//            };
+//        }
+//
+//        app.config(["$provide", function($provide) {
+//            $provide.decorator("logProvider", ["$delegate", function($delegate) {
+//                return {
+//                    log: function(msg) {
+//                        var date = new Date();
+//                        $delegate.log(date.toString() + ": " + msg);
+//                    }
+//                };
+//            }]);
+//        }]);
+
+
+//        app.controller('IocCtrl', IocCtrl);
+//        IocCtrl.$inject = ['$scope'];
+//        function IocCtrl ($scope) {
+////            $scope.message = myvalue;
+//
+////            log("my message");
+////            myfactory.service1();
+//
+////            if($injector.has('myresult')){
+////                $scope.message = $injector.get('myresult');
+////            }
+////            else {
+////                var myresult = $injector.invoke(function (myservice) {
+////                    return myservice.hello('marie');
+////                });
+////            }
+//        }
+
+//        app.service("myservice",function($http){
+//            this.hello = function(name){
+//                return "Hello " + name;
+//            };
+//        });
+
+
+
+//        app.factory("myfactory",['$http', function($http){
+//            return{
+//                methodOne: function(){
+//
+//                },
+//                methodTwo: function(){
+//
+//                }
+//            }
+//        }]);
+//
+//        app.service("myservice",['$http', function($http){
+//            var self = this;
+//            this.$http = $http;
+//
+//            this.methodOne = function(){
+//
+//            };
+//            this.methodTwo = function(){
+//
+//            };
+//        }]);
+//
+//        app.provider("logProvider", function(){
+//            var enabled = true;
+//            this.disableLogging = function(){
+//                enabled = false;
+//            };
+//
+//            this.$get = function(){
+//                if(enabled){
+//                    return {
+//                        log : function (message) {
+//                            console.log(message);
+//                        }
+//                    }
+//                }
+//                else {
+//                    return {
+//                        log : function () { }
+//                    }
+//                }
+//            };
+//        });
+
+
+//        var myService = $injector.invoke(function () {
+//
+//        })
+    })();
+
+
+</script>
+</body>
+</html>

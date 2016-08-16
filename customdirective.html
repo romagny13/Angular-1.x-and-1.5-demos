@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+</head>
+
+<body ng-app="app">
+
+<div  ng-controller="MainCtrl">
+
+    <my-directive mymessage="hello"></my-directive>
+
+</div>
+
+<hello-world name="my name"></hello-world>
+
+<!--<div my-directive></div>-->
+<!--<div my-directive=""></div>-->
+<!--<div data-my-directive></div>-->
+<!--<div my:directive></div>-->
+<!--<div my_directive></div>-->
+
+
+
+<script src="bower_components/angular/angular.js"></script>
+<script>
+
+    (function (){
+
+        var app = angular.module("app", []);
+
+        app.controller('MainCtrl',  MainCtrl);
+        MainCtrl.$inject = ['$scope'];
+        function MainCtrl($scope) {
+            $scope.title = "Hello";
+        }
+     
+//        app.directive('myDirective', function () {
+//            return {
+//                restrict : 'ACME',
+//                templateUrl : 'views/mydirective.html'
+//            }
+//        })
+//        var count = 0;
+//        app.directive('myDirective', function () {
+//            return {
+//                restrict : 'E',
+//                scope : {},
+//                template : '{{ mymessage }} {{ result }} </br>',
+//                link : function (scope, element, params) {
+//                    ++count;
+//                    scope.mymessage = "item " + count;
+//                },
+//                compile: function compile(tElement, tAttrs, transclude) {
+//                    return {
+//                        pre: function preLink(scope, iElement, iAttrs, controller) {
+//
+//                        },
+//                        post: function postLink(scope, iElement, iAttrs, controller) {
+//                            count ++;
+//                            scope.mymessage = "Item " + count;
+//                        }
+//                    }
+//                    // or
+//                    // return function postLink( ... ) { ... }
+//                },
+//            }
+//        })
+
+        app.directive('myDirective', function () {
+            return {
+                restrict : 'E',
+                scope : {
+                    result : '=mymessage'
+                },
+                template : '{{ mymessage }}',
+                link : function (scope, element, params) {
+//                    console.log(scope);
+//                    console.log(element);
+//                    console.log(params);
+
+                }
+            }
+        });
+
+        app.component('helloWorld', {
+            bindings: {
+                name: '@'
+            },
+            controller : function helloWorldCtrl () {
+                this.logName = function () {
+                    console.log(this.name);
+                }
+            },
+            template : '<div><span ng-click="$ctrl.logName()">Hi {{$ctrl.name}}!</span></div>'
+        });
+
+
+    })();
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+</head>
+
+<body ng-app="app">
+<h1 class="page-title">Titre de la page</h1>
+
+<div  ng-controller="ParentCtrl">
+    {{ message }}
+    <button ng-click="send()">Send</button>
+
+    <div  ng-controller="ChildrenCtrl">
+        {{ message }}
+        <button ng-click="send()">Send</button>
+    </div>
+    
+</div>
+
+<script src="bower_components/angular/angular.js"></script>
+<script>
+
+    (function (){
+
+        var app = angular.module("app", []);
+        app.controller('ParentCtrl', ParentCtrl);
+        ParentCtrl.$inject = ['$scope'];
+        function ParentCtrl ($scope) {
+            $scope.$on("message", function(e, message) {
+                $scope.message = message;
+            });
+
+            $scope.send = function () {
+                $scope.$broadcast("message", "from ParentCtrl");
+            };
+
+            $scope.message = "my message";
+            $scope.$watch('message',function (newVal,oldVal,scope) {
+                console.log(newVal);
+            });
+        }
+        app.controller('ChildrenCtrl', ChildrenCtrl);
+        ChildrenCtrl.$inject = ['$scope'];
+        function ChildrenCtrl ($scope) {
+            $scope.$on("message", function(e, message) {
+                $scope.message = message;
+            });
+
+            $scope.send = function () {
+                $scope.$emit("message", "from ChildrenCtrl");
+            }
+        }
+
+    })();
+
+
+</script>
+</body>
+</html>

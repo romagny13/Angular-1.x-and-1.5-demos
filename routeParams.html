@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+</head>
+
+<body ng-app="app">
+
+<div ng-view></div>
+
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular-route/angular-route.js"></script>
+<script>
+
+    (function (){
+
+        var app = angular.module("app", [ 'ngRoute']);
+        app.config(function ($routeProvider) {
+            $routeProvider
+                    .when('/',{
+                        template: '<h1>Home</h1><a href="#/posts">Posts</a><a href="#/posts/1">Detail</a><a href="#/posts/1?query=value">Search</a> '
+                    })
+                    .when('/posts', {
+                        templateUrl: 'views/paramsinfo.html',
+                        controller : 'PostCtrl',
+//                        reloadOnSearch: false
+                    })
+                    .when('/posts/:id', {
+                        templateUrl: 'views/paramsinfo.html',
+                        controller : 'PostCtrl',
+                        reloadOnSearch: false
+                    })
+                    .otherwise({redirectTo: "/"});
+
+        });
+
+        app.run(['$rootScope', '$route', function ($rootScope, $route) {
+
+            $rootScope.$on('$routeChangeStart', function (sender, args) {
+                console.log(args);
+            });
+
+            $rootScope.$on('$routeChangeSuccess', function (sender, args) {
+                console.log(args);
+            });
+
+            $rootScope.$on('$routeChangeError', function (sender, args) {
+                console.log("Promises rejected " + args.loadedTemplateUrl);
+            });
+
+            $rootScope.$on('$routeUpdate', function (sender, args) {
+                console.log("Search parameters updated: " + args.params["query"]);
+            });
+
+        }]);
+
+        app.controller('PostCtrl', PostCtrl);
+        PostCtrl.$inject = ['$scope', '$location', '$routeParams'];
+        function PostCtrl ($scope, $location, $routeParams) {
+            var self = this;
+            this.$routeParams = $routeParams;
+            this.getParamsInfo = function () {
+//                console.log(self.$routeParams);
+                return {
+                    "params" : self.$routeParams
+                };
+            };
+
+            $scope.search = function () {
+                $location.search("query", "new value");
+            };
+
+            $scope.paramsInfo = this.getParamsInfo();
+            $scope.$on("$locationChangeStart", function () {
+                $scope.paramsInfo = self.getParamsInfo();
+            });
+        }
+    })();
+
+
+
+
+
+
+</script>
+</body>
+</html>

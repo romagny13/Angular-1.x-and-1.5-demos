@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body ng-app="app">
+
+<component-one></component-one>
+
+
+<script src="../bower_components/angular/angular.js"></script>
+<script>
+
+    (function (){
+
+        var app = angular.module("app", []);
+        app.service('myService',myService);
+        function myService($http) {
+            this.getItems = function () {
+                return $http.get('data.json').then(function (response) {
+                    return response.data;
+                })
+            };
+        }
+        myService.$inject = ['$http'];
+
+        app.component('componentOne', {
+            templateUrl : 'components/componentone.html',
+            controller :['$http', 'myService', function ($http, myService) {
+                var $ctrl = this;
+                $ctrl.title = 'Hello';
+
+                $ctrl.$onInit = function () {
+                    myService.getItems().then(function (items) {
+                        $ctrl.items = items;
+                    });
+                }
+            }]
+        });
+
+        app.component('componentTwo', {
+            template : '{{ $ctrl.message }}',
+            bindings : {
+                message : '@'
+            }
+        });
+
+        // ou
+//        function ComponentOneCtrl($http) {
+//
+//        }
+//        app.component('componentOne', {
+//            template : '<h1>{{ $ctrl.title }}</h1>',
+//            controller :['$htttp', ComponentOneCtrl]
+//        });
+
+
+
+    })();
+
+</script>
+</body>
+</html>

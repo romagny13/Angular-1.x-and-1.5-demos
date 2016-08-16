@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body ng-app="app">
+
+<component-two message="My message"></component-two>
+
+
+<script src="../bower_components/angular/angular.js"></script>
+<script>
+
+    (function (){
+
+        var app = angular.module("app", []);
+        app.component('componentTwo', {
+            template : '{{ $ctrl.message }}',
+            bindings : {
+                message : '@'
+            }
+        });
+
+
+    })();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body ng-app="app">
+
+<div ng-view></div>
+
+<script src="../bower_components/angular/angular.js"></script>
+<script src="../bower_components/angular-route/angular-route.js"></script>
+<script>
+
+    (function () {
+
+        var app = angular.module("app", [ 'ngRoute']);
+        app.config(function ($routeProvider) {
+            $routeProvider
+                    .when('/',{
+                        template: '<a href="#/one">One</a><a href="#/two">Two</a>'
+                    })
+                    .when('/one', {
+                        template: '<component-one></component-one>'
+                    })
+                    .when('/two', {
+                        template: '<component-two message="My message"></component-two>'
+                    })
+                    .otherwise({redirectTo: "/"});
+
+        });
+
+        app.component('componentOne', {
+            template : '<h1>Hello</h1>',
+        });
+        app.component('componentTwo', {
+            template : '{{ $ctrl.message }}',
+            bindings : {
+                message : '@'
+            }
+        });
+
+    })();
+
+</script>
+</body>
+</html>

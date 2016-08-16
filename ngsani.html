@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body ng-app="app" ng-controller="MyCtrl">
+
+<h1 ng-bind-html="title"></h1>
+<input ng-model="title">
+
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+<script>
+
+    (function (){
+
+        var app = angular.module("app", [ 'ngSanitize']);
+        app.controller('MyCtrl', MyCtrl);
+        MyCtrl.$inject = ['$scope'];
+        function MyCtrl ($scope) {
+            $scope.title = 'Mon <em>titre</em>';
+        }
+
+    })();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body ng-app="app">
+
+<component-app></component-app>
+
+<script src="../bower_components/angular/angular.js"></script>
+<script src="../bower_components/angular-component-router/angular_1_router.js"></script>
+<script>
+
+    (function () {
+
+        var app = angular.module("app", ['ngComponentRouter']);
+        app.value("$routerRootComponent", "componentApp");
+
+        app.component("componentApp", {
+            templateUrl: 'components/componentapp.html',
+            $routeConfig: [
+                { path: "/one", component:"componentOne", name: "One" },
+                { path: "/two/:id", component:"componentTwo", name: "Two" },
+                { path: "/**", redirectTo: ["One"] }
+            ]
+        });
+
+        app.component('componentOne', {
+            bindings : {
+                '$router' : '<'
+            },
+            template : '<h1>One</h1><a href ng-click="$ctrl.nav()">Nav</a>',
+            controller : function () {
+                var $ctrl = this;
+                
+                $ctrl.nav = function () {
+                    $ctrl.$router.navigate(["Two", {id : 20 }, "Two"])
+                };
+                
+            }
+        });
+
+        app.component('componentTwo', {
+            template : '<h1>Two</h1>{{ $ctrl.message }} ',
+            controller : function () {
+                var $ctrl = this;
+                $ctrl.$routerOnActivate = function (next) {
+                    $ctrl.message = next.params.id;
+                };
+            }
+        });
+
+
+    })();
+
+</script>
+</body>
+</html>
